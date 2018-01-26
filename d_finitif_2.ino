@@ -21,7 +21,7 @@ void loop()
     while(temps == 3600) 
     {
       quantite = (int)compteur;
-      stock = compteur-(int)compteur;
+      stock = compteur-quantite;
       temps = 0;
       
       if(stock < 0.5) stock = 0;

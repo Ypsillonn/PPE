@@ -29,7 +29,7 @@ void loop()
       
       quantite = quantite + stock;
     } 
-    delay(1000);
+    delay(1500);
     temps = temps+1;
 }
 

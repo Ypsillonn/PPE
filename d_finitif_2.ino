@@ -4,7 +4,8 @@ int etatBouton = 0;
 float compteur = 0;
 int quantite = 0;
 float stock = 0;
-int temps = 0; 
+int temps = 0;
+int prec;
 
 void setup() 
 {
@@ -30,6 +31,7 @@ void loop()
       quantite = quantite + stock;
     } 
     delay(1500);
+    prec = quantite
     temps = temps+1;
 }
 

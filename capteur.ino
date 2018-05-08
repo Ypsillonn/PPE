@@ -2,24 +2,36 @@ const int pingPin = 7;
 const int pin = 2;
 int buttonState = 0;
 
+/**************************************************************************/
+
 void setup() {
   Serial.begin(9600);
   pinMode(pin, INPUT);
 }
 
+/**************************************************************************/
+
 void loop() {
-  float duration, cm;
+  float duration, cm; //Valeurs décimales pour plus de précisions
   
+/*****Séquence émission/réception des ultrasons******/
+
   pinMode(pingPin, OUTPUT);
   digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
   digitalWrite(pingPin, HIGH);
   delayMicroseconds(5);
   digitalWrite(pingPin, LOW);
-
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
-
+  
+/***************************************************/
+  
+  float microsecondsToCentimeters(float microseconds) { //Conversion de l'écart de temps en distance
+  return microseconds / 29 / 2;
+      
+/************Affichage après activation*************/
+ 
   buttonState = digitalRead(pin);
   if(buttonState == HIGH) 
     {
@@ -30,9 +42,4 @@ void loop() {
 
       delay(10000000);
     }
-
-  
-}
-float microsecondsToCentimeters(float microseconds) {
-  return microseconds / 29 / 2;
 }

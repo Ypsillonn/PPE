@@ -1,48 +1,73 @@
-#include "Wire.h" // For I2C
-#include "LCD.h" // For LCD
-#include "LiquidCrystal_I2C.h" // Added library*
-//Set the pins on the I2C chip used for LCD connections
-//ADDR,EN,R/W,RS,D4,D5,D6,D7
-LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7); // 0x27 is the default I2C bus address of the backpack-see article
-
-long temp;
-long vent;
-long pres;
-long humi;
-long lum;
-long prec;
-
+#include <VirtualWire.h> // Librairie pour récepteur I2C
+#include "LiquidCrystal_I2C.h" // Librairie pour LCD
+LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7); // Initialisation du LCD
+  
+/******Définition des variables******/
+ 
+int temp, vent, pres, humi, lum, prec;
+  
+/***********************************/
+ 
 void setup()
 {
-   Serial.begin(9600);
-   lcd.begin(20,4); // 20 x 4 LCD module
-   lcd.setBacklight(HIGH);
-   lcd.clear();
-   lcd.setCursor(5,1);
-   lcd.print("Bienvenue."); 
-   randomSeed(analogRead(0));  
-}
-void loop()
-{
-  vent = random(0, 100);
-  humi = random(0, 100);
-  pres = random(980, 1040);
-  temp = random(-20, 50);
-  vent = random(0, 100);
-  lum = random(0, 1000);
-  prec = random(0, 15);
-  Serial.println(vent);
-  Serial.println(humi);
-  Serial.println(pres);
-  Serial.println(temp);
-  Serial.println(lum);
-  Serial.println(prec);
+   Serial.begin(9600); // Configuration de la vitesse de transfert
   
-  for (int i=0; i <= 120; i++)
-  { 
-    delay(10000);
+    /*******Configuration du LCD*******/
+ 
+   lcd.begin(20,4); //Taille du LCD
+   lcd.setBacklightPin(3,POSITIVE);
+   lcd.setBacklight(HIGH); //Intensité d'éclairage
+   
+    /**********Initialisation**********/
+ 
+   lcd.clear(); //Suppression d'éventuels caractères résiduels
+   lcd.setCursor(5,1);
+   lcd.print("Bienvenue."); //Message de bienvenue
+   
+    /**Configuration du récepteur I2C**/
+ 
+   vw_set_rx_pin (8);
+   vw_setup(2000);
+   vw_rx_start();
+}
+
+/**************************************************************************/
+
+void loop()
+{  
+  /*********Réception valeurs**********/
+ 
+  char message[VW_MAX_MESSAGE_LEN];
+  char taille_message = VW_MAX_MESSAGE_LEN;
+  
+  if (vw_get_message((byte*)message, &taille_message)) {
+    // On copie le message, corrompu ou non
+
+    char * pch;
+    pch = strtok (message,",");
+    temp = atoi(pch);
+
+    pch = strtok (NULL,",");
+    pres = atoi(pch);
+
+    pch = strtok (NULL,",");
+    vent = atoi(pch);
+    
+    pch = strtok (NULL,",");
+    humi = atoi(pch);
+    
+    pch = strtok (NULL,",");
+    lum = atoi(pch);
+    
+    pch = strtok (NULL,",");
+    prec = atoi(pch);
+  }
+  
+  /**********Affichage tournant**********/
+ 
+  delay(5000);
     lcd.clear();
-    lcd.setCursor(0,0);
+    lcd.home();
     lcd.print("Vent:        ");
     lcd.print(vent);
     lcd.print("km/h");
@@ -59,7 +84,7 @@ void loop()
     lcd.print(temp);
     lcd.print((char) 223);
     lcd.print("C");
-    delay(10000);
+    delay(5000);
   
     lcd.clear();
     lcd.home();
@@ -79,7 +104,7 @@ void loop()
     lcd.print("Luminosite:  ");
     lcd.print(lum);
     lcd.print("Lx");
-    delay(10000);
+    delay(5000);
     
     lcd.clear();
     lcd.home();
@@ -99,5 +124,63 @@ void loop()
     lcd.print("Precipit.:   ");
     lcd.print(prec);
     lcd.print("mm");
-  }
+    delay(5000);
+  
+    lcd.clear();
+    lcd.home();
+    lcd.print("Pression:    ");
+    lcd.print(pres);
+    lcd.print("hPa");
+    lcd.setCursor(0,1);
+    lcd.print("Temperature: ");
+    lcd.print(temp);
+    lcd.print((char) 223);
+    lcd.print("C");
+    lcd.setCursor(0,2);
+    lcd.print("Luminosite:  ");
+    lcd.print(lum);
+    lcd.print("Lx");
+    lcd.setCursor(0,3);
+    lcd.print("Vent:        ");
+    lcd.print(vent);
+    lcd.print("km/h");
+    delay(5000);
+  
+    lcd.clear();
+    lcd.home();
+    lcd.print("Temperature: ");
+    lcd.print(temp);
+    lcd.print((char) 223);
+    lcd.print("C");
+    lcd.setCursor(0,1);
+    lcd.print("Luminosite:  ");
+    lcd.print(lum);
+    lcd.print("Lx");
+    lcd.setCursor(0,2);
+    lcd.print("Vent:        ");
+    lcd.print(vent);
+    lcd.print("km/h");
+    lcd.setCursor(0,3);
+    lcd.print("Humidite:    ");
+    lcd.print(humi);
+    lcd.print("%");
+    delay(5000);
+  
+    lcd.clear();
+    lcd.home();
+    lcd.print("Luminosite:  ");
+    lcd.print(lum);
+    lcd.print("Lx");
+    lcd.setCursor(0,1);
+    lcd.print("Vent:        ");
+    lcd.print(vent);
+    lcd.print("km/h");
+    lcd.setCursor(0,2);
+    lcd.print("Humidite:    ");
+    lcd.print(humi);
+    lcd.print("%");
+    lcd.setCursor(0,3);
+    lcd.print("Pression:    ");
+    lcd.print(pres);
+    lcd.print("hPa");
 }

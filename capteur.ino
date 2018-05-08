@@ -25,9 +25,9 @@ void loop() {
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
   
-/***************************************************/
+/*****Conversion de l'écart de temps en distance*****/
   
-  float microsecondsToCentimeters(float microseconds) { //Conversion de l'écart de temps en distance
+  float microsecondsToCentimeters(float microseconds) {
   return microseconds / 29 / 2;
       
 /************Affichage après activation*************/

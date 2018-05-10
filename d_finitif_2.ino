@@ -7,25 +7,28 @@ float stock = 0;
 int temps = 0;
 int prec;
 
+/**************************************************************************/
+
 void setup() 
 {
   Serial.begin(9600);
   pinMode(buttonPin, INPUT);
 }
 
+/**************************************************************************/
+
 void loop()
 {
     etatBouton = digitalRead(pinBouton);
-    Serial.print(temps);
-    if(etatBouton == HIGH) compteur = compteur+0.1;
+    if(etatBouton == HIGH) compteur = compteur+0.1; //Lorsque l'ILS est activé, on incrémente
     
-    while(temps == 3600) 
+    while(temps == 3600) //La valeur affichée sur le LCD est mise à jour toutes les heures
     {
       quantite = (int)compteur;
       stock = compteur-quantite;
-      temps = 0;
+      temps = -1;
       
-      if(stock < 0.5) stock = 0;
+      if(stock < 0.5) stock = 0; //On arrondie la valeur
       else stock = 1;
       
       quantite = quantite + stock;

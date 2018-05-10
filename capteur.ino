@@ -24,7 +24,6 @@ void loop() {
   digitalWrite(pingPin, LOW);
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
-
       
 /************Affichage après activation*************/
  

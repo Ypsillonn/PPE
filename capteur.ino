@@ -24,11 +24,7 @@ void loop() {
   digitalWrite(pingPin, LOW);
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
-  
-/*****Conversion de l'écart de temps en distance*****/
-  
-  float microsecondsToCentimeters(float microseconds) {
-  return microseconds / 29 / 2;
+
       
 /************Affichage après activation*************/
  
@@ -42,4 +38,9 @@ void loop() {
 
       delay(10000000);
     }
-}
+} 
+/*****Conversion de l'écart de temps en distance*****/
+  
+  float microsecondsToCentimeters(float microseconds) {
+  return microseconds / 29 / 2;
+  }
